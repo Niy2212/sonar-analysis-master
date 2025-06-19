@@ -4,6 +4,10 @@ pipeline {
         jdk 'jdk17'
         maven 'maven3'
     }
+    options {
+        timestamps()
+        timeout(time: 20, unit: 'MINUTES')
+    }
     stages{
         stage("Cleanup Workspace"){
                 steps {
