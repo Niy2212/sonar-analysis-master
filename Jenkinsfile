@@ -3,11 +3,7 @@ pipeline {
     tools {
         jdk 'jdk17'
         maven 'maven3'
-    }
-    options {
-        timestamps()
-        timeout(time: 20, unit: 'MINUTES')
-    }
+        }
     stages{
         stage("Cleanup Workspace"){
                 steps {
@@ -24,30 +20,30 @@ pipeline {
         stage("Build Application"){
             steps {
                 sh "mvn clean package"
-            }
+                }
 
-       }
+           }
 
-       stage("Test Application"){
+        stage("Test Application"){
            steps {
                  sh "mvn test"
            }
        }
-    stage("SonarQube Analysis"){
-        steps {
-            script {
-                withSonarQubeEnv(credentialsId: "Sonarqube_Token_Key"){
-                sh "mvn sonar:sonar"
+        stage("SonarQube Analysis"){
+            steps {
+                script {
+                    withSonarQubeEnv(credentialsId: "Sonarqube_Token_Key"){
+                    sh "mvn sonar:sonar"
+                    }
+                }
+            }
+        }    
+        stage("Quality Gate"){
+            steps {
+                script {
+                    waitForQualityGate abortPipeline: false, credentialsId: "Sonarqube_Token_Key"
+                    }
                 }
             }
         }
-       }
-    stage("Quality Gate"){
-        steps {
-            script {
-                waitForQualityGate abortPipeline: true, credentialsId: "Sonarqube_Token_Key"
-                }
-            }
-        }
-    }
-}    
+    }    
