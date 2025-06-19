@@ -20,8 +20,11 @@ pipeline {
                     git branch: 'main', credentialsId: 'github', url: 'https://github.com/Niy2212/sonar-analysis-master'
                 }
         }
+        stage("Build Application") {
+            steps {
+                sh "mvn clean package"
+            }
 
-    
        stage("Test Application"){
            steps {
                  sh "mvn test"
