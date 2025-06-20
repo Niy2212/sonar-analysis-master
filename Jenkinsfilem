@@ -42,6 +42,7 @@ pipeline {
         stage("Quality Gate") {
             steps {
                 script {
+                    sonar.qualitygate.wait=true
                     // This will now fail the pipeline if the quality gate fails
                     waitForQualityGate abortPipeline: true, credentialsId: "Sonarqube_Token_Key"
                 }
